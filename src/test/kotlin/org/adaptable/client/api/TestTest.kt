@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.adaptable.client.api.exceptions.FailedToStartTestException
+import org.adaptable.client.api.exceptions.TestNotStartedException
 import org.adaptable.client.api.exceptions.TestStartedException
 import org.adaptable.client.api.exceptions.TimeOutException
 import org.adaptable.client.socket.WebSocketClientFactory
@@ -150,14 +151,15 @@ class TestTest : FunSpec() {
             verify(socket!!).sendMessage(any<MakeUnavailable>())
         }
 
-        test("if test not running then make test point unavailable does nothing") {
+        test("if test not running then an exception is thrown") {
             val behaviourSubject = BehaviorSubject.create<Response>()
             behaviourSubject.onNext(StartTestResponse(true, null))
             val test = Test(websocketClientFactory!!, 1000) { behaviourSubject }
             behaviourSubject.onNext(MakeUnavailableResponse(true, null))
-            test.EndPointController().makeEndPointUnavailable("id")
 
-            verify(socket!!, times(0)).sendMessage(any<MakeUnavailable>())
+            shouldThrowExactly<TestNotStartedException> {
+                test.EndPointController().makeEndPointUnavailable("id")
+            }
         }
 
         test("when make test point available called message is sent and response received") {
@@ -171,15 +173,6 @@ class TestTest : FunSpec() {
             verify(socket!!).sendMessage(any<MakeAvailable>())
         }
 
-        test("if test not running then make test point available does nothing") {
-            val behaviourSubject = BehaviorSubject.create<Response>()
-            behaviourSubject.onNext(StartTestResponse(true, null))
-            val test = Test(websocketClientFactory!!, 1000) { behaviourSubject }
-            behaviourSubject.onNext(MakeAvailableResponse(true, null))
-            test.EndPointController().makeEndPointUnavailable("id")
-
-            verify(socket!!, times(0)).sendMessage(any<MakeAvailable>())
-        }
 
         test("when message not received timeout is thrown") {
             val test = Test(websocketClientFactory!!, 1000) {  PublishSubject.create() }
