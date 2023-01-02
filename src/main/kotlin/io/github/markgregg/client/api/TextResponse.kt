@@ -17,8 +17,5 @@ class TextResponse(
 
     constructor(value: Any) : this(HttpStatus.OK.value(), jacksonObjectMapper().writeValueAsString(value))
 
-    override fun toDom(): io.github.markgregg.common.api.Response {
-
-        return io.github.markgregg.common.web.TextResponse(status, body, headers, false)
-    }
+    override fun toDom(): io.github.markgregg.common.api.Response = io.github.markgregg.common.web.TextResponse(status, body, headers, false)
 }

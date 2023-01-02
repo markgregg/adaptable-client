@@ -14,7 +14,6 @@ class BinaryResponse(
 
     constructor(body: ByteBuffer) : this(HttpStatus.OK.value(), body )
 
-    override fun toDom(): io.github.markgregg.common.api.Response {
-        return io.github.markgregg.common.web.BinaryResponse(status, Base64.getEncoder().encodeToString(body.array()), headers, false)
-    }
+    override fun toDom(): io.github.markgregg.common.api.Response =
+        io.github.markgregg.common.web.BinaryResponse(status, Base64.getEncoder().encodeToString(body.array()), headers, false)
 }

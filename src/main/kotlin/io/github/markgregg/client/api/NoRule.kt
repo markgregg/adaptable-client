@@ -9,9 +9,9 @@ class NoRule(
     constructor(response: Response) : this(response, null)
     constructor(responses: List<Response>) : this(null, responses)
 
-    override fun toDom(): io.github.markgregg.common.api.Rule {
-        return NoRule(
+    override fun toDom(): io.github.markgregg.common.api.Rule =
+        NoRule(
             response?.toDom(),
-            responses?.map{ it.toDom()} )
-    }
+            responses?.map{ it.toDom()}
+        )
 }

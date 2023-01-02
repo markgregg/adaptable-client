@@ -33,9 +33,7 @@ class RequestsImpl internal constructor() : Requests {
         return response
     }
 
-    override fun requests(): List<Request> {
-        return requests
-    }
+    override fun requests(): List<Request> = requests
 
     override fun <T : Request> response(ofType: Class<T>, forCondition: (T) -> Boolean): ResponseRule<T> {
         val rule = ResponseRuleImpl(ofType, forCondition)
@@ -62,9 +60,7 @@ class RequestsImpl internal constructor() : Requests {
             ?: waitForNewRequest( Request::class.java, { operation.execute(it) as Boolean }, timeInMilliseconds ?: defaultTimeout )
     }
 
-    override fun hasResponses(): Boolean {
-        return rules.any { it.hasResponse() }
-    }
+    override fun hasResponses(): Boolean = rules.any { it.hasResponse() }
 
     private fun <T : Request> waitForNewRequest(clazz: Class<T>, predicate: (T) -> Boolean, timeout: Long): T {
         val response = AtomicReference<T>()

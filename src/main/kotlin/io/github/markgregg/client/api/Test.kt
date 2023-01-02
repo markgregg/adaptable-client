@@ -18,7 +18,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
-
 /***
  *
  * When test goes out of scope terminate connection and end test
@@ -105,8 +104,8 @@ class Test internal constructor(
     /***
      *
      */
-    fun addEndPoint(id: String): io.github.markgregg.client.api.EndPoint {
-        val endPoint = io.github.markgregg.client.api.EndPoint(id, this.EndPointController(), RequestsImpl())
+    fun addEndPoint(id: String): EndPoint {
+        val endPoint = EndPoint(id, this.EndPointController(), RequestsImpl())
         endPoints[endPoint.id] = endPoint
         return endPoint
     }
@@ -114,16 +113,12 @@ class Test internal constructor(
     /***
      *
      */
-    fun endPoint(id: String): io.github.markgregg.client.api.EndPoint? {
-        return endPoints[id]
-    }
+    fun endPoint(id: String): EndPoint? = endPoints[id]
 
     /***
      *
      */
-    fun endPoints(): Collection<io.github.markgregg.client.api.EndPoint> {
-        return endPoints.values
-    }
+    fun endPoints(): Collection<EndPoint> = endPoints.values
 
     private fun addRequestToEndPoint(requestResponse: RequestResponse) {
         logger.debug("Received end point request $requestResponse")
@@ -133,9 +128,7 @@ class Test internal constructor(
         }
     }
 
-    private fun toDom(): io.github.markgregg.common.api.Test {
-        return io.github.markgregg.common.api.Test(id, endPoints.values.map { it.toDom() })
-    }
+    private fun toDom(): io.github.markgregg.common.api.Test = io.github.markgregg.common.api.Test(id, endPoints.values.map { it.toDom() })
 
     private fun <T, R : Response>sendMessageAndWaitForResponse(message: T, responseClazz: Class<R>): Response {
         val response = AtomicReference<Response>()

@@ -58,7 +58,5 @@ class ResponseRuleImpl<T : Request> internal constructor(
         }
     }
 
-    override fun hasResponse(): Boolean {
-        return response != null
-    }
+    override fun hasResponse(): Boolean = response != null
 }

@@ -14,7 +14,7 @@ class EndPoint internal constructor(
     private val requests: Requests
 ) {
     companion object {
-        private val logger = LoggerFactory.getLogger(io.github.markgregg.client.api.EndPoint::class.java)
+        private val logger = LoggerFactory.getLogger(EndPoint::class.java)
     }
     private val rules = ArrayList<Rule>()
     private var unavailable: Boolean = false
@@ -22,14 +22,12 @@ class EndPoint internal constructor(
     /***
      *
      */
-    fun rules(): List<Rule> {
-        return rules
-    }
+    fun rules(): List<Rule> = rules
 
     /***
      *
      */
-    fun addRule(rule: Rule): io.github.markgregg.client.api.EndPoint {
+    fun addRule(rule: Rule): EndPoint {
         rules.add(rule)
         return this
     }
@@ -37,14 +35,12 @@ class EndPoint internal constructor(
     /***
      *
      */
-    fun requests(): Requests {
-        return requests
-    }
+    fun requests(): Requests = requests
 
     /**
      *
      */
-    fun makeUnavailable(): io.github.markgregg.client.api.EndPoint {
+    fun makeUnavailable(): EndPoint {
         unavailable = true
         parent?.makeEndPointUnavailable(id)
         return this
@@ -53,7 +49,7 @@ class EndPoint internal constructor(
     /***
      *
      */
-    fun makeAvailable(): io.github.markgregg.client.api.EndPoint {
+    fun makeAvailable(): EndPoint {
         unavailable = false
         parent?.makeEndPointAvailable(id)
         return this
@@ -74,12 +70,11 @@ class EndPoint internal constructor(
     }
 
     internal fun addRequest(request: Request): Response? {
-        io.github.markgregg.client.api.EndPoint.Companion.logger.debug("Adding request")
+        logger.debug("Adding request")
         return requests.add(request)
     }
 
-    internal fun toDom() : io.github.markgregg.common.api.EndPoint {
-        return io.github.markgregg.common.api.EndPoint(id, rules.map { it.toDom() }, unavailable, requests.hasResponses() )
-    }
+    internal fun toDom() : io.github.markgregg.common.api.EndPoint =
+        io.github.markgregg.common.api.EndPoint(id, rules.map { it.toDom() }, unavailable, requests.hasResponses() )
 
 }
